@@ -95,16 +95,21 @@ func main() {
 	ctx := genCtx{*packageName, make(map[string][]byte)}
 	for _, file := range resources {
 		fmt.Printf("Analyzing %s\n", file)
-		info, err := os.Stat(file)
-		if os.IsNotExist(err) {
-			fmt.Fprintf(os.Stderr,"Resources %s does not exists\n", file)
-		}
-		if info.IsDir() {
-			loadDirectory(file, ctx.Resources)
-			// todo manage error
-		} else {
-			loadFile(file, ctx.Resources)
-			// todo manage error
+		matches, _ := filepath.Glob(file)
+		for _, match := range matches {
+			fmt.Println(match)
+			info, err := os.Stat(match)
+			if os.IsNotExist(err) {
+				fmt.Fprintf(os.Stderr,"Resources %s does not exists\n", match)
+				break
+			}
+			if info.IsDir() {
+				loadDirectory(match, ctx.Resources)
+				// todo manage error
+			} else {
+				loadFile(match, ctx.Resources)
+				// todo manage error
+			}
 		}
 	}	
 
