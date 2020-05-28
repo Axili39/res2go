@@ -83,6 +83,7 @@ func loadDirectory(directory string, resdata map[string][]byte) error {
 
 func main() {
 	packageName := flag.String("package", "resources", "package name")
+	outputfile := flag.String("o", *packageName + ".go", "output file")
 	flag.Parse()
 	resources := flag.Args() 
 	
@@ -107,14 +108,14 @@ func main() {
 		}
 	}	
 
-	// generate output
+	// generate output TODO : Make directory package
 	data, err := ctx.generate()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error formatting generated code", err)
 		os.Exit(1)
 	}
 
-	err = ioutil.WriteFile(*packageName + ".go", data, 0644)
+	err = ioutil.WriteFile(*outputfile, data, 0644)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error writing blob file", err)
 	}
