@@ -1,8 +1,8 @@
 package main
 
 import (
-	"flag"
 	"bytes"
+	"flag"
 	"fmt"
 	"go/format"
 	"io/ioutil"
@@ -26,15 +26,15 @@ func {{.Prefix}}Init(){
 `
 
 type genCtx struct {
-	Package string
+	Package   string
 	Resources map[string][]byte
-	Prefix string
+	Prefix    string
 }
 
 func (g *genCtx) generate() ([]byte, error) {
 	fileTemplate := template.Must(template.New("").Funcs(map[string]interface{}{"format": FormatBuffer}).Parse(genTmpl))
 	stream := &bytes.Buffer{}
-	err := fileTemplate.Execute(stream,g)
+	err := fileTemplate.Execute(stream, g)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error executing template", err)
 		return nil, err
@@ -46,7 +46,7 @@ func (g *genCtx) generate() ([]byte, error) {
 func FormatBuffer(sl []byte) string {
 	builder := strings.Builder{}
 	for i, v := range sl {
-		if i % 40 == 0 {
+		if i%40 == 0 {
 			builder.WriteString("\n")
 		}
 		builder.WriteString(fmt.Sprintf("0x%02x,", int(v)))
@@ -66,7 +66,7 @@ func loadFile(file string, resdata map[string][]byte) error {
 }
 
 func loadDirectory(directory string, resdata map[string][]byte) error {
-	return filepath.Walk(directory, 
+	return filepath.Walk(directory,
 		func(path string, info os.FileInfo, err error) error {
 			fmt.Println("scanning ", path, " ", directory)
 			if err != nil {
@@ -76,19 +76,19 @@ func loadDirectory(directory string, resdata map[string][]byte) error {
 			//relativePath := filepath.ToSlash(strings.TrimPrefix(path, directory))
 			if info.IsDir() {
 				return nil
-			} 
-			loadFile(path, resdata)
-		return nil
-	})
+			}
+			err = loadFile(path, resdata)
+			return err
+		})
 }
 
 func main() {
 	packageName := flag.String("package", "resources", "package name")
-	outputfile := flag.String("o", *packageName + ".go", "output file")
+	outputfile := flag.String("o", *packageName+".go", "output file")
 	prefix := flag.String("prefix", "", "add prefix to all exported function")
 	flag.Parse()
-	resources := flag.Args() 
-	
+	resources := flag.Args()
+
 	if resources == nil {
 		fmt.Fprintln(os.Stderr, "no directory nor files provided")
 		os.Exit(1)
@@ -102,18 +102,24 @@ func main() {
 			fmt.Println(match)
 			info, err := os.Stat(match)
 			if os.IsNotExist(err) {
-				fmt.Fprintf(os.Stderr,"Resources %s does not exists\n", match)
+				fmt.Fprintf(os.Stderr, "Resources %s does not exists\n", match)
 				break
 			}
 			if info.IsDir() {
-				loadDirectory(match, ctx.Resources)
-				// todo manage error
+				err = loadDirectory(match, ctx.Resources)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error parsing directory %s : %v\n", info.Name(), err)
+					os.Exit(1)
+				}
 			} else {
-				loadFile(match, ctx.Resources)
-				// todo manage error
+				err = loadFile(match, ctx.Resources)
+				if err != nil {
+					fmt.Fprintf(os.Stderr, "Error loading file %s : %v\n", info.Name(), err)
+					os.Exit(1)
+				}
 			}
 		}
-	}	
+	}
 
 	// generate output TODO : Make directory package
 	data, err := ctx.generate()
