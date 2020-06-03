@@ -1,5 +1,6 @@
-<TODO Build & Test Badge>
-<TODO Coverage Badge>
+![Build & Test](https://github.com/Axili39/res2go/workflows/Build%20&%20Test/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/Axili39/res2go/badge.svg?branch=master)](https://coveralls.io/github/Axili39/res2go?branch=master)
+
 Resource Package Generator for goland
 =====================================
 

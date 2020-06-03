@@ -60,8 +60,9 @@ func loadFile(file string, resdata map[string][]byte) error {
 		fmt.Fprintf(os.Stderr, "Error reading %s: %s", file, err)
 		return err
 	}
-	resdata[file] = b
-	fmt.Println(file, " added")
+	key := strings.ReplaceAll(file, "\\", "/")
+	resdata[key] = b
+	fmt.Println(key, " added")
 	return nil
 }
 
