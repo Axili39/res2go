@@ -74,7 +74,7 @@ func loadDirectory(directory string, resdata map[string][]byte) error {
 				fmt.Fprintln(os.Stderr, "Error :", err)
 				return err
 			}
-			//relativePath := filepath.ToSlash(strings.TrimPrefix(path, directory))
+			// relativePath := filepath.ToSlash(strings.TrimPrefix(path, directory))
 			if info.IsDir() {
 				return nil
 			}
