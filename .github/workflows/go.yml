@@ -22,6 +22,7 @@ jobs:
 
       - name: Build
         run: |
+          go version
           go mod download
           go mod tidy
           go build -v .
@@ -30,6 +31,7 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           skip-go-installation: true
+          working-directory: .
 
   test:
     strategy:
