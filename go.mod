@@ -1,3 +1,3 @@
 module github.com/Axili39/res2go
 
-go 1.13
+go 1.14

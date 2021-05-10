@@ -1,10 +1,10 @@
 ![Build & Test](https://github.com/Axili39/res2go/workflows/Build%20&%20Test/badge.svg)
 [![Coverage Status](https://coveralls.io/repos/github/Axili39/res2go/badge.svg?branch=master)](https://coveralls.io/github/Axili39/res2go?branch=master)
 
-Resource Package Generator for goland
+Resource Package Generator for Golang
 =====================================
 
-Very simple generator used to embed some file into executable. Usefull to store template files.
+Very simple generator used to embed some file into executable. Useful to store template files.
 
 ```shell
 go get github.com/Axili39/res2go
@@ -12,7 +12,8 @@ go build
 go install
 ```
 
-usage :
+usage:
+
 ```shell
 Usage of ./res2go:
   -o string
@@ -32,14 +33,14 @@ res2go -package myresources index.html
 res2go -package myresources -o rsrc/rsrc.go resources/*.templates
 
 res2go -package main -o rsrc.go -prefix Rsrc resources/*
-
 ```
 
-Examples in go code :
+Example in Go code:
+
 ```go
 //go:generate res2go -package resources -o resources/resources.go resources/*.templates
 
-import(
+import (
   "./resources"
 )
 
