@@ -18,7 +18,7 @@ package {{.Package}}
 var {{.Prefix}}Files map[string][]byte
 {{$prefix := .Prefix}}
 func {{.Prefix}}Init(){
-	{{.Prefix}}Files = make(map[string][]byte) 
+	{{.Prefix}}Files = make(map[string][]byte)
 	{{- range $name, $file := .Resources }}
 	{{$prefix}}Files["{{ $name }}"] = []byte{ {{ format $file }} }
 	{{- end }}
@@ -126,6 +126,12 @@ func main() {
 	data, err := ctx.generate()
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error formatting generated code", err)
+		os.Exit(1)
+	}
+
+	err = os.MkdirAll(filepath.Dir(*outputfile), os.ModePerm)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error creating directory path", err)
 		os.Exit(1)
 	}
 
